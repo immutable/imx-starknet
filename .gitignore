@@ -1,0 +1,13 @@
+.vscode
+env
+.pytest_cache
+__pycache__
+node_modules
+cache
+starknet-artifacts
+
+# Contract ABI and build files
+artifacts
+
+# Deployment contract addresses
+*.deployments.txt
