@@ -63,7 +63,7 @@ jobs:
       - name: Start Devnet
         run: |
           docker pull shardlabs/starknet-devnet
-          docker run -p 127.0.0.1:5000:5000 shardlabs/starknet-devnet --lite-mode &
+          docker run -p 127.0.0.1:5050:5050 shardlabs/starknet-devnet --lite-mode &
           sleep 15s && echo "sleeping for 15s to let devnet start"
       - name: Run Cairo Tests
         run: npm run test

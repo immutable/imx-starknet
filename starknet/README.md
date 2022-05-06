@@ -215,10 +215,10 @@ docker pull shardlabs/starknet-devnet
 Run docker container on localhost. Use the `--lite-mode` flag to skip transaction and block hash computation to slightly improve devnet performance:
 
 ```
-docker run -it -p 127.0.0.1:5000:5000 shardlabs/starknet-devnet --lite-mode
+docker run -it -p 127.0.0.1:5050:5050 shardlabs/starknet-devnet --lite-mode
 ```
 
-Set up `hardhat.config.ts` to use devnet running on port 5000:
+Set up `hardhat.config.ts` to use devnet running on port 5050:
 
 ```
 starknet: {
@@ -228,7 +228,7 @@ starknet: {
 },
 networks: {
   devnet: {
-    url: "http://localhost:5000"
+    url: "http://localhost:5050"
   }
 },
 ```
