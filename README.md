@@ -4,7 +4,7 @@
 
 Immutable X is the first liquidity protocol for NFTs on Layer 2. The platform is built on StarkWare's [StarkEx](https://starkware.co/starkex/), a layer 2 scalability engine, leveraging zero-knowledge STARK technology to achieve significant scalability on top of Ethereum without compromising on security.
 
-With the launch of [StarkNet](https://starkware.co/starknet/), StarkWare's permissionless, decentralized, layer 2 ZK-Rollup, Immutable X is adopting a multi-settlement strategy starting with StarkEx and StarkNet. As part of Phase 1 of our rollout plan, we are releasing a set of contracts with the core NFT primitives necessary to launch a project on StarkNet, which projects can permissionlessly build on. Find out more in our [StarkNet strategy blog post](\<TODO: insert link to blog post>).
+With the launch of [StarkNet](https://starkware.co/starknet/), StarkWare's permissionless, decentralized, layer 2 ZK-Rollup, Immutable X is adopting a multi-settlement strategy starting with StarkEx and StarkNet. As part of Phase 1 of our rollout plan, we are releasing a set of contracts with the core NFT primitives necessary to launch a project on StarkNet, which projects can permissionlessly build on. Find out more in our [StarkNet strategy blog post](https://immutablex.medium.com/immutable-starknet-cross-rollup-nft-liquidity-b32df88cda02).
 
 In this repository, you will find Cairo implementations of:
 
