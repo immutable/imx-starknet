@@ -21,19 +21,13 @@ These contracts were designed to be feature-rich recommended standards on StarkN
 
 ### StarkNet:
 
-See [starknet/README.md](starknet/README.md) for an in-depth setup guide for a Cairo development environment.
+See [immutablex/starknet/README.md](immutablex/starknet/README.md) for an in-depth setup guide for a Cairo development environment.
 
 The StarkNet package includes all Cairo contracts for the above implementations. It uses some community-developed tools for Javascript/Typescript development on StarkNet:
 
 - [`@shardlabs/starknet-hardhat-plugin`](https://github.com/Shard-Labs/starknet-hardhat-plugin)
 - [`@shardlabs/starknet-devnet`](https://github.com/Shard-Labs/starknet-devnet)
 - [`starknet.js`](https://github.com/0xs34n/starknet.js)
-
-### Ethereum:
-
-See [ethereum/README.md](ethereum/README.md) for an in-depth setup guide for a Solidity development environment.
-
-The Ethereum package includes the Solidity contracts required for the L1 Ethereum side of the asset bridging primitive. It was bootstrapped using [hardhat](https://hardhat.org/getting-started/).
 
 ## Contribution
 
