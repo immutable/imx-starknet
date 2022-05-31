@@ -168,7 +168,7 @@ func release{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
 
     # Transfer the ERC20 tokens to payee
     IERC20.transfer(token, payee, payment)
-    # Emit PaymentRelased event
+    # Emit PaymentReleased event
     PaymentReleased.emit(token, payee, payment)
     return ()
 end

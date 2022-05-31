@@ -85,7 +85,7 @@ The `ERC20_Mintable_Capped` preset includes `Ownable`, `Mintable`, and `Capped` 
 
 - `Capped` - an immutable maximum supply is set on contract initialization
 
-`ERC20_Mintable_Capped` describes a fixed supply ERC20 token with a designated contract owner who has minting rights. Such a preset would be suitable for a standard governance token, for example, but less accomodating for other bespoke functionality, such as infinite supply in-game resource tokens or otherwise.
+`ERC20_Mintable_Capped` describes a fixed supply ERC20 token with a designated contract owner who has minting rights. Such a preset would be suitable for a standard governance token, for example, but less accommodating for other bespoke functionality, such as infinite supply in-game resource tokens or otherwise.
 
 This is an example for deploying an ERC20 token using the above preset in Javascript, using [`@shardlabs/starknet-hardhat-plugin`](https://www.npmjs.com/package/@shardlabs/starknet-hardhat-plugin) and [`starknet.js`](https://github.com/0xs34n/starknet.js).
 
