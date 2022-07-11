@@ -1,6 +1,6 @@
 # Contributing to Immutable X StarkNet Contracts
 
-We greatly appreciate all community feedback and contributions to this repository. This guide will walk you through the different ways you can contribute, including opening Github issues, pull requests, reporting security issues, requesting features, and providing general feedback.
+We greatly appreciate all community feedback and contributions to this repository. This guide will walk you through the different ways you can contribute, including opening Github issues, pull requests, requesting features, and providing general feedback. For any security disclosures, please email starknet-security@immutable.com
 
 ## Opening an issue
 

@@ -1,0 +1,22 @@
+["protostar.config"]
+protostar_version = "0.2.3"
+
+["protostar.project"]
+libs_path = "lib"
+
+["protostar.shared_command_configs"]
+cairo_path = ["./lib/cairo_contracts/src", "./lib/cairo_lib/src"]
+
+["protostar.contracts"]
+erc20_mintable_capped = [
+    "./immutablex/starknet/token/erc20/presets/ERC20_Mintable_Capped.cairo",
+]
+erc721_full = [
+    "./immutablex/starknet/token/erc721/presets/ERC721_Full.cairo",
+]
+payment_splitter = [
+    "./immutablex/starknet/finance/PaymentSplitter.cairo",
+]
+bridge = [
+    "./immutablex/starknet/bridge/StandardERC721Bridge.cairo",
+]

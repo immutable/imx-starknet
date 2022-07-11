@@ -9,7 +9,7 @@ from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.bool import TRUE, FALSE
 from starkware.cairo.common.math import assert_not_zero
 
-from openzeppelin.introspection.ERC165 import ERC165_register_interface
+from openzeppelin.introspection.ERC165 import ERC165
 
 from immutablex.starknet.utils.constants import IACCESSCONTROL_ID
 
@@ -56,7 +56,7 @@ namespace AccessControl:
         default_admin : felt
     ):
         AccessControl._grant_role(DEFAULT_ADMIN_ROLE, default_admin)
-        ERC165_register_interface(IACCESSCONTROL_ID)
+        ERC165.register_interface(IACCESSCONTROL_ID)
         return ()
     end
 
