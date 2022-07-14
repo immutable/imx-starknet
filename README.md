@@ -13,7 +13,7 @@ In this repository, you will find Cairo implementations of:
 - Metadata standards
 - Royalties
 - Payment Splitter
-- Asset Bridging (L1 ↔︎ L2) (coming soon)
+- Asset Bridging (Arch)
 
 These contracts were designed to be feature-rich recommended standards on StarkNet, generalizable for current and future partner use cases as well as the wider ecosystem. This helps advance the necessary StarkNet primitives for Immutable X's StarkNet strategy and provides easy onboarding with out-of-the-box Cairo contracts to help developers build on StarkNet.
 
@@ -30,11 +30,15 @@ The StarkNet package includes all Cairo contracts for the above implementations.
 
 ## Contribution
 
-We aim to build robust and feature-rich standards to help all developers onboard and build their projects on StarkNet, and we welcome any and all feedback and contributions to this repository! See our [contribution guideline](CONTRIBUTING.md) for more details on opening Github issues, pull requests, reporting security issues, requesting features, and providing general feedback.
+We aim to build robust and feature-rich standards to help all developers onboard and build their projects on StarkNet, and we welcome any and all feedback and contributions to this repository! See our [contribution guideline](CONTRIBUTING.md) for more details on opening Github issues, pull requests requesting features, and providing general feedback.
 
 ## Disclaimers
 
-These Cairo contracts are in a very experimental stage and are subject to change without notice. The code has not yet been formally audited or reviewed and may have security vulnerabilities. Do not use in production.
+These Cairo contracts are in a very experimental stage and are subject to change without notice. The code has not yet been formally audited or reviewed and may have security vulnerabilities. Do not use in production. We take no responsibility for your implementation decisions and any security problems you might experience.
+
+## Security
+
+Please responsibly disclose any security issues you find by reaching out to starknet-security@immutable.com
 
 ## License
 

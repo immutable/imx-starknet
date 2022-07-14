@@ -7,6 +7,12 @@ from starkware.cairo.common.uint256 import Uint256
 
 @contract_interface
 namespace IERC721:
+    func name() -> (name : felt):
+    end
+
+    func symbol() -> (symbol : felt):
+    end
+
     func balanceOf(owner : felt) -> (balance : Uint256):
     end
 
@@ -21,7 +27,7 @@ namespace IERC721:
     func transferFrom(from_ : felt, to : felt, tokenId : Uint256):
     end
 
-    func approve(approved : felt, tokenId : Uint256):
+    func approve(to : felt, tokenId : Uint256):
     end
 
     func setApprovalForAll(operator : felt, approved : felt):

@@ -63,7 +63,7 @@ Create a new file in the `contracts` folder called `MyERC20.cairo`. We import th
 
 %lang starknet
 
-from immutablex.token.erc20.presets.ERC20_Mintable_Capped import constructor
+from immutablex.starknet.token.erc20.presets.ERC20_Mintable_Capped import constructor
 ```
 
 You can add additional functions to your contract as required, as long the function name does not conflict with the existing ERC20 functions.
@@ -116,9 +116,48 @@ Using `hardhat`:
 npx hardhat starknet-deploy --starknet-network alpha --inputs "<name> <symbol> <decimals> <owner> <cap>"
 ```
 
-## Contribution
+<br/>
+<br/>
+
+# Contribution
 
 If you wish to contribute to this repository, please check out our [contribution guidelines](../../CONTRIBUTING.md). To set up the development environment:
+
+## Using Protostar
+
+Protostar is a much more lightweight development environment that is easy to set up and use with minimal effort. Protostar can be used to run unit/functional tests and offers additional functionality through the CLI. See [Protostar documentation here](https://docs.swmansion.com/protostar/docs/tutorials/introduction). No Python virtual environment is required.
+
+### Install Protostar
+
+Copy and run in a terminal the following command:
+
+```
+curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
+```
+
+You may have to restart the terminal. Run `protostar -v` to check Protostar and cairo-lang version.
+
+### Install dependencies
+
+Run the following command to install dependencies. Protostar currently uses git submodules to handle dependencies.
+
+```
+protostar install
+```
+
+### Run tests
+
+```
+# Run all tests
+protostar test
+
+# Run a specific test
+protostar test ./path/to/test/file.cairo::test_name_here
+```
+
+## Using Hardhat
+
+Hardhat setup will be required to run integration tests and hardhat tests on a local devnet. Hardhat also allows you to write and run scripts to deploy/interact with contracts in Typescript/Javascript.
 
 ### Install Python packages
 
@@ -132,19 +171,19 @@ pip install -r requirements.txt
 
 #### Potential issues with M1 Macs
 
-You will need to use Python 3.10 and Pip 3.10
+You may not have success with every version of Python. Version 3.8 should work out of the box.
 
 To install, run:
 
 ```
-brew install python@3.10
+brew install python@3.8
 python3 -m pip install --upgrade pip # on mac
 ```
 
 Then add this to ~/.zshrc
 
 ```
-export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.8/bin:$PATH"
 ```
 
 Some packages may not install properly when installing or compiling Cairo

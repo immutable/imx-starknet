@@ -6,7 +6,7 @@
 from starkware.cairo.common.uint256 import Uint256
 
 @contract_interface
-namespace IERC2981_Unidirectional_Royalties:
+namespace IERC2981_Unidirectional:
     func royaltyInfo(tokenId : Uint256, salePrice : Uint256) -> (
         receiver : felt, royaltyAmount : Uint256
     ):

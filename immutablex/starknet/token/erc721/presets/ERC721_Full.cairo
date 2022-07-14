@@ -11,7 +11,7 @@ from starkware.cairo.common.uint256 import Uint256
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import get_caller_address
 
-from openzeppelin.introspection.ERC165 import ERC165_supports_interface
+from openzeppelin.introspection.ERC165 import ERC165
 
 from immutablex.starknet.token.erc721.library import ERC721
 from immutablex.starknet.token.erc721_token_metadata.library import ERC721_Token_Metadata
@@ -57,7 +57,7 @@ end
 func supportsInterface{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     interfaceId : felt
 ) -> (success : felt):
-    let (success) = ERC165_supports_interface(interfaceId)
+    let (success) = ERC165.supports_interface(interfaceId)
     return (success)
 end
 

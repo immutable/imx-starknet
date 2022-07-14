@@ -1,9 +1,9 @@
 {
   "name": "@imtbl/starknet",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Immutable X StarkNet contracts",
   "scripts": {
-    "compile": "npx hardhat compile && npx hardhat starknet-compile ./immutablex && npx hardhat starknet-compile ./tests",
+    "compile": "npx hardhat compile && npx hardhat starknet-compile ./immutablex",
     "compile:cairo": "npx hardhat starknet-compile",
     "test": "npx hardhat test",
     "clean": "rm -r starknet-artifacts"

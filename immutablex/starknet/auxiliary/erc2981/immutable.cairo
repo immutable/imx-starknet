@@ -18,8 +18,8 @@ from starkware.cairo.common.uint256 import (
     uint256_unsigned_div_rem,
 )
 
-from openzeppelin.introspection.ERC165 import ERC165_register_interface
-from openzeppelin.security.safemath import uint256_checked_mul, uint256_checked_div_rem
+from openzeppelin.introspection.ERC165 import ERC165
+from openzeppelin.security.safemath import SafeUint256
 
 from immutablex.starknet.utils.constants import IERC2981_ID
 
@@ -40,7 +40,7 @@ namespace ERC2981_Immutable:
     func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         receiver : felt, fee_basis_points : felt
     ):
-        ERC165_register_interface(IERC2981_ID)
+        ERC165.register_interface(IERC2981_ID)
         _set_contract_royalty(receiver, fee_basis_points)
         return ()
     end
@@ -56,8 +56,8 @@ namespace ERC2981_Immutable:
         let (royalty) = ERC2981_Immutable_royalty_info.read()
 
         # royalty_amount = sale_price * fee_basis_points / 10000
-        let (x : Uint256) = uint256_checked_mul(sale_price, Uint256(royalty.fee_basis_points, 0))
-        let (royalty_amount : Uint256, _) = uint256_checked_div_rem(x, Uint256(FEE_DENOMINATOR, 0))
+        let (x : Uint256) = SafeUint256.mul(sale_price, Uint256(royalty.fee_basis_points, 0))
+        let (royalty_amount : Uint256, _) = SafeUint256.div_rem(x, Uint256(FEE_DENOMINATOR, 0))
 
         return (royalty.receiver, royalty_amount)
     end

@@ -7,10 +7,10 @@ import {
   fromUint256WithFelts,
   strToFeltArr,
   feltArrToStr,
-} from "../../../utils/starknetUtils";
+} from "../../../../utils/starknetUtils";
 import { StarknetContract } from "hardhat/types/runtime";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import { deployERC721 } from "../../../utils/starknetDeploys";
+import { deployERC721 } from "../../../../utils/starknetDeploys";
 
 // TODO: This test cases should be modularised once devnet is working
 describe("ERC721 Test Cases", function () {
@@ -107,8 +107,7 @@ describe("ERC721 Test Cases", function () {
       const tokenId = toUint256WithFelts("0");
       const resultURIArr = (await contract.call("tokenURI", { tokenId }))
         .tokenURI;
-      const resultURI = feltArrToStr(resultURIArr);
-      expect(resultURI).to.deep.equal("0");
+      expect(resultURIArr).to.deep.equal([]);
     });
   });
 
