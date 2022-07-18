@@ -1,8 +1,8 @@
-# ERC721 Bridge
+# Arch - ERC721 Bridging Protocol
 
-This describes an implementation of an NFT bridge from L1 Ethereum to L2 StarkNet. It was developed for use with ERC721 tokens but can be extensible to other NFT standards like ERC1155.
+This readme describes the technical implementation of Arch v1 - an NFT bridge from L1 Ethereum to L2 StarkNet. It was developed for use with ERC721 tokens but can be extensible to other NFT standards like ERC1155 in the future.
 
-The bridge aims to be generalized and contract-agnostic. Project owners must deploy an L1 and L2 token contract, and then register the contract pair to move tokens between layers. The L2 StarkNet token contract must implement `IERC721_Bridgeable`. We have an example ERC721 preset (ERC721_Full) in Cairo that works with this bridge implementation. The current design requires Immutable's authorization for registering L1<>L2 contract pairs, similar to many other token bridges being used today, however, we are exploring ways to make the entire process decentralized and permissionless while maintaining security and integrity between layers.
+The bridge aims to be generalized and contract-agnostic. Project owners must deploy an L1 and L2 token contract, and then register the contract pair to move tokens between layers. The L2 StarkNet token contract must implement `IERC721_Bridgeable`. We have an example ERC721 preset (`ERC721_Full`) in Cairo that works with this bridge implementation. The current design requires Immutable's authorization for registering L1<>L2 contract pairs, similar to many other token bridges being used today, however, we are exploring ways to make the entire process decentralized and permissionless while maintaining security and integrity between layers.
 
 ## Deployments
 
@@ -16,6 +16,10 @@ Deployment addresses on Goerli TestNet:
 
 Deployment addresses on Mainnet:
 Coming soon
+
+## Demo/walkthrough
+
+https://youtu.be/MzmeVL0vZ0A
 
 ## Contract structure
 
@@ -80,7 +84,7 @@ This ERC721 bridge implementation comprises of four main contracts:
 
 **Bridge Registry**
 
-The bridge registry contract stores L1<>L2 token contract mappings and acts as the source of truth for the ERC721 Bridge. The initial implementation is a permissioned approach where Immutable will control the registration of token contract pairs, however we will be exploring ways to make this permissionless going forwards.
+The bridge registry contract stores L1<>L2 token contract mappings and acts as the source of truth for the ERC721 Bridge. Contract registration will be permissionless on our Goerli testnet deployment. We plan to use a permissioned approach in the initial mainnet deployment where Immutable will control the registration of token contract pairs, however we will be exploring ways to make this permissionless going forwards.
 
 **ERC721 Escrow**
 
@@ -100,29 +104,27 @@ These diagrams walk through some of the main user flows (registration, deposits,
 
 ### Registration
 
-When the token bridge is deployed, project owners will be able to register their L1 and L2 token contract pairs to make their assets bridgeable by reaching out to Immutable for a manual registration. We will be looking into making the entire registration process permissionless and frictionless in the future.
+When the token bridge is deployed, project owners will be able to register their L1 and L2 token contract pairs to make their assets bridgeable by interacting with the contract (Goerli) or reaching out to Immutable for a manual registration (Mainnet). We will be looking into making the entire registration process permissionless and frictionless in the future.
 
-Immutable will register the L1 and L2 contract pair in the bridge registry contract and then users will be able to deposit and withdraw ERC721 tokens between Ethereum/StarkNet.
+Once the L1 and L2 contract pair is registered with the bridge registry contract, users will be able to deposit and withdraw the corresponding ERC721 tokens between Ethereum/StarkNet.
 
 ![initialization](./assets/bridge_initialize.png)
 
 ### Deposits
 
-Depositing an ERC721 token from L1 Ethereum to L2 StarkNet. As a prerequisite, the L1<>L2 contract pair must have already been registered in the bridge registry.
-
-The user must approve the bridge contract for spending their token(s) that they wish to bridge by calling ERC721's `approve` or `setApprovalForAll` methods.
+Depositing an ERC721 token from L1 Ethereum to L2 StarkNet. As a prerequisite, the L1<>L2 contract pair must have already been registered in the bridge registry and the user must have approved the bridge contract for spending their token(s) that they wish to bridge (by calling ERC721's `approve` or `setApprovalForAll` methods).
 
 1. Then the user will call `deposit` on the L1 bridge contract.
 2. The bridge contract retrieves the corresponding L2 token address from the bridge registry, and reverts if no contract pair can be found.
 3. The deposited token(s) will be transferred to the ERC721 escrow contract.
-4. A payload will be constructed with the details of the withdrawal and sent to L2 to be consumed by the L2 bridge contract.
+4. A payload will be constructed with the details of the deposit and sent to L2 to be consumed by the L2 bridge contract.
 5. Once the message is received on StarkNet (there may be a small delay), the deposit handler on the L2 bridge contract will be automatically invoked, and the token(s) will be minted to the specified recipient on StarkNet through `permissionedMint`.
 
 ![deposits](./assets/bridge_deposit.png)
 
 ### Withdrawals
 
-Withdrawal of an ERC721 token from L2 StarkNet to L1 Ethereum. As similar to deposits, the L1<>L2 contract pair must have already been registered in the bridge registry. Note that this current flow only supports withdrawal of L1-deposited tokens, not L2-originated tokens.
+Withdrawal of an ERC721 token from L2 StarkNet to L1 Ethereum. As similar to deposits, the L1<>L2 contract pair must have already been registered in the bridge registry. Note that this current flow only supports withdrawal of L1-deposited tokens, not L2-native tokens (minted on StarkNet only).
 
 1. The user calls `initiate_withdrawal` on the L2 bridge contract to initiate the withdrawal process. This function checks the L1<>L2 mapping in the contract to retrieve the L1 contract address.
 2. The token(s) to be withdrawn will be burned through the `permissionedBurn` function on the ERC721 contract.

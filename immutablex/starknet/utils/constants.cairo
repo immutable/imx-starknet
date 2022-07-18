@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache 2.0
-# Based on OpenZeppelin Contracts for Cairo v0.1.0 (utils/constants.cairo)
-# Modified by Immutable v0.1.0 (utils/constants.cairo)
+# Based on OpenZeppelin Contracts for Cairo v0.2.1 (utils/constants.cairo)
+# Modified by Immutable v0.2.1 (utils/constants.cairo)
 # - Added IERC20_RECEIVER_ID and IERC2981_ID constants
 
 %lang starknet

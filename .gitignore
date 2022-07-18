@@ -10,6 +10,7 @@ typechain
 
 # Contract ABI and build files
 artifacts
+build
 
 # Deployment contract addresses
 *.deployments.txt

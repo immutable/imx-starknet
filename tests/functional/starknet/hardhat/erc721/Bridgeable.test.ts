@@ -4,10 +4,10 @@ import {
   toUint256WithFelts,
   tryCatch,
   shouldFail,
-} from "../../../utils/starknetUtils";
+} from "../../../../utils/starknetUtils";
 import { StarknetContract } from "hardhat/types/runtime";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import { deployERC721 } from "../../../utils/starknetDeploys";
+import { deployERC721 } from "../../../../utils/starknetDeploys";
 
 describe("Bridgeable Test Cases", function () {
   console.log(`Using network ${config.starknet.network}`);
@@ -92,7 +92,7 @@ describe("Bridgeable Test Cases", function () {
           role: starknet.shortStringToBigInt("MINTER_ROLE"),
           account,
         }),
-        `AccessControl: account is missing role`
+        `AccessControl: caller is missing role 0`
       );
     });
   });
@@ -127,7 +127,7 @@ describe("Bridgeable Test Cases", function () {
           account: BigInt(acc1.starknetContract.address),
           tokenId: toUint256WithFelts(2),
         }),
-        `AccessControl: account is missing role`
+        `AccessControl: caller is missing role 93433465781963921833282629`
       );
     });
   });
@@ -169,7 +169,7 @@ describe("Bridgeable Test Cases", function () {
           account: BigInt(acc1.starknetContract.address),
           tokenId: toUint256WithFelts(2),
         }),
-        `AccessControl: account is missing role`
+        `AccessControl: caller is missing role 93433465781963921833282629`
       );
     });
   });

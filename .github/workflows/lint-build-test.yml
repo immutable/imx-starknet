@@ -34,8 +34,28 @@ jobs:
           github_token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
           prettier_options: "--write **/*.ts"
 
-  compile-test:
-    name: Compile and Run Tests
+  cairo-format-test:
+    name: Test Cairo Code Formatted
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run Cairo Format
+        run: |
+          find . -type f -name "*.cairo" -exec bash -c 'i="$1"; cairo-format $i | diff $i - >/dev/null 2>&1 && echo $i _PASSED_TEST_ || echo $i _FAILED_TEST_ | tee -a cairo-format-test.log' bash {} \;
+          test -f cairo-format-test.log && echo Failed cairo-format test && exit 1
+          echo "Passed Cairo Format test"
+
+  hardhat-test:
+    name: Run Hardhat Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -50,11 +70,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Run Cairo Format
-        run: |
-          find . -type f -name "*.cairo" -exec bash -c 'i="$1"; cairo-format $i | diff $i - >/dev/null 2>&1 && echo $i _PASSED_TEST_ || echo $i _FAILED_TEST_ | tee -a cairo-format-test.log' bash {} \;
-          test -f cairo-format-test.log && echo Failed cairo-format test && exit 1
-          echo "Passed Cairo Format test"
       - name: Run Compile
         run: npm run compile
       - name: Start Devnet
@@ -64,3 +79,18 @@ jobs:
           sleep 15s && echo "sleeping for 15s to let devnet start"
       - name: Run Tests
         run: export REPORT_GAS=true; npm run test
+
+  protostar-test:
+    name: Run Protostar Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install Protostar
+        run: |
+          curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
+          echo "~/.protostar/dist/protostar/" >> $GITHUB_PATH
+      - name: Run tests
+        run: protostar test

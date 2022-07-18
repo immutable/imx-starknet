@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache 2.0
-# Based on OpenZeppelin Contracts for Cairo v0.1.0 (token/erc721/library.cairo)
-# Modified by Immutable v0.1.0 (token/erc721/library.cairo)
+# Based on OpenZeppelin Contracts for Cairo v0.2.1 (token/erc721/library.cairo)
+# Modified by Immutable v0.2.1 (token/erc721/library.cairo)
 
 %lang starknet
 
@@ -12,9 +12,9 @@ from starkware.cairo.common.uint256 import Uint256, uint256_check
 from starkware.cairo.common.bool import TRUE, FALSE
 
 from openzeppelin.introspection.IERC165 import IERC165
-from openzeppelin.introspection.ERC165 import ERC165_register_interface
+from openzeppelin.introspection.ERC165 import ERC165
 from openzeppelin.token.erc721.interfaces.IERC721_Receiver import IERC721_Receiver
-from openzeppelin.security.safemath import uint256_checked_add, uint256_checked_sub_le
+from openzeppelin.security.safemath import SafeUint256
 
 from immutablex.starknet.utils.constants import (
     IERC721_ID,
@@ -78,9 +78,9 @@ namespace ERC721:
         ERC721_name.write(name)
         ERC721_symbol.write(symbol)
         # register IERC721
-        ERC165_register_interface(IERC721_ID)
+        ERC165.register_interface(IERC721_ID)
         # register IERC721_Metadata
-        ERC165_register_interface(IERC721_METADATA_ID)
+        ERC165.register_interface(IERC721_METADATA_ID)
         return ()
     end
 
@@ -339,12 +339,12 @@ namespace ERC721:
 
         # Decrease owner balance
         let (owner_bal) = ERC721_balances.read(from_)
-        let (new_balance : Uint256) = uint256_checked_sub_le(owner_bal, Uint256(1, 0))
+        let (new_balance : Uint256) = SafeUint256.sub_le(owner_bal, Uint256(1, 0))
         ERC721_balances.write(from_, new_balance)
 
         # Increase receiver balance
         let (receiver_bal) = ERC721_balances.read(to)
-        let (new_balance : Uint256) = uint256_checked_add(receiver_bal, Uint256(1, 0))
+        let (new_balance : Uint256) = SafeUint256.add(receiver_bal, Uint256(1, 0))
         ERC721_balances.write(to, new_balance)
 
         # Update token_id owner
@@ -382,7 +382,7 @@ namespace ERC721:
         end
 
         let (balance : Uint256) = ERC721_balances.read(to)
-        let (new_balance : Uint256) = uint256_checked_add(balance, Uint256(1, 0))
+        let (new_balance : Uint256) = SafeUint256.add(balance, Uint256(1, 0))
         ERC721_balances.write(to, new_balance)
         ERC721_owners.write(token_id, to)
         Transfer.emit(0, to, token_id)
@@ -418,7 +418,7 @@ namespace ERC721:
 
         # Decrease owner balance
         let (balance : Uint256) = ERC721_balances.read(owner)
-        let (new_balance : Uint256) = uint256_checked_sub_le(balance, Uint256(1, 0))
+        let (new_balance : Uint256) = SafeUint256.sub_le(balance, Uint256(1, 0))
         ERC721_balances.write(owner, new_balance)
 
         # Delete owner

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (token/erc20/interfaces/IERC20_Mintable_Capped.cairo)
+# Immutable Cairo Contracts v0.2.1 (token/erc20/interfaces/IERC20_Mintable_Capped.cairo)
 
 %lang starknet
 

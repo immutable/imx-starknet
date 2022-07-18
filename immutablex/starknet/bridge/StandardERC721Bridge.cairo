@@ -7,7 +7,7 @@ from starkware.starknet.common.messages import send_message_to_l1
 from starkware.cairo.common.uint256 import Uint256, uint256_check
 from starkware.cairo.common.math import assert_not_zero
 
-from openzeppelin.access.ownable import Ownable_initializer, Ownable_only_owner
+from openzeppelin.access.ownable import Ownable
 
 from immutablex.starknet.token.erc721.interfaces.IERC721 import IERC721
 from immutablex.starknet.bridge.interfaces.IERC721_Bridgeable import IERC721_Bridgeable
@@ -25,7 +25,7 @@ end
 # TODO: l1 handler to register pair of addresses, ownable + ability to change l1 bridge/upgrade?
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(owner : felt):
-    Ownable_initializer(owner)
+    Ownable.initializer(owner)
     return ()
 end
 
@@ -57,7 +57,7 @@ end
 func set_l1_bridge{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     l1_bridge_address : felt
 ):
-    Ownable_only_owner()
+    Ownable.assert_only_owner()
     _l1_bridge.write(l1_bridge_address)
     return ()
 end
