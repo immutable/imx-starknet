@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (access/IAccessControl.cairo)
+# Immutable Cairo Contracts v0.2.1 (access/IAccessControl.cairo)
 
 %lang starknet
 

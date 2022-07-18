@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (finance/IPaymentSplitter.cairo)
+# Immutable Cairo Contracts v0.2.1 (finance/IPaymentSplitter.cairo)
 
 %lang starknet
 

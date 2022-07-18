@@ -7,10 +7,10 @@ import {
   fromUint256WithFelts,
   strToFeltArr,
   feltArrToStr,
-} from "../../../utils/starknetUtils";
+} from "../../../../utils/starknetUtils";
 import { StarknetContract } from "hardhat/types/runtime";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import { deployERC721 } from "../../../utils/starknetDeploys";
+import { deployERC721 } from "../../../../utils/starknetDeploys";
 
 // TODO: This test cases should be modularised once devnet is working
 describe("ERC721 Test Cases", function () {
@@ -107,8 +107,7 @@ describe("ERC721 Test Cases", function () {
       const tokenId = toUint256WithFelts("0");
       const resultURIArr = (await contract.call("tokenURI", { tokenId }))
         .tokenURI;
-      const resultURI = feltArrToStr(resultURIArr);
-      expect(resultURI).to.deep.equal("0");
+      expect(resultURIArr).to.deep.equal([]);
     });
   });
 
@@ -238,7 +237,7 @@ describe("ERC721 Test Cases", function () {
       // We use acc2 to invoke setContractURI, which should fail as they are not the owner of the contract
       await shouldFail(
         acc2.invoke(contract, "setContractURI", { contract_uri: contractURI }),
-        `AccessControl: account is missing role`
+        `AccessControl: caller is missing role 0`
       );
     });
   });
@@ -254,7 +253,7 @@ describe("ERC721 Test Cases", function () {
           account: toWallet,
           tokenId: tokenIdUint256,
         }),
-        `AccessControl: account is missing role`
+        `AccessControl: caller is missing role 93433465781963921833282629`
       );
     });
   });

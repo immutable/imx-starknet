@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (supply/capped.cairo)
+# Immutable Cairo Contracts v0.2.1 (supply/capped.cairo)
 
 %lang starknet
 
@@ -8,7 +8,7 @@ from starkware.cairo.common.math import assert_not_zero
 from starkware.cairo.common.uint256 import Uint256, uint256_le, uint256_lt, uint256_check
 from starkware.cairo.common.bool import FALSE
 
-from openzeppelin.security.safemath import uint256_checked_add
+from openzeppelin.security.safemath import SafeUint256
 
 @storage_var
 func _cap() -> (cap : Uint256):
@@ -34,7 +34,7 @@ namespace Capped:
     ):
         alloc_locals
         with_attr error_message("Capped: supply overflow"):
-            let (new_supply : Uint256) = uint256_checked_add(total_supply, amount)
+            let (new_supply : Uint256) = SafeUint256.add(total_supply, amount)
         end
         # check new_supply <= cap
         let (cap : Uint256) = _cap.read()

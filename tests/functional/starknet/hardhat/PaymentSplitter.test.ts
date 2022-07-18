@@ -5,10 +5,10 @@ import {
   toUint256WithFelts,
   tryCatch,
   shouldFail,
-} from "../../utils/starknetUtils";
+} from "../../../utils/starknetUtils";
 import { StarknetContract } from "hardhat/types/runtime";
 import { Account } from "@shardlabs/starknet-hardhat-plugin/dist/src/account";
-import { deployERC20 } from "../../utils/starknetDeploys";
+import { deployERC20 } from "../../../utils/starknetDeploys";
 
 describe("PaymentSplitter Test Cases", function () {
   this.timeout(300_000); // 5 min
@@ -48,8 +48,8 @@ describe("PaymentSplitter Test Cases", function () {
 
         // Call getter functions
         const ts = (await splitter.call("totalShares")).total_shares;
-        const p1 = (await splitter.call("payee", { index: BigInt(1) })).payee;
-        const p2 = (await splitter.call("payee", { index: BigInt(2) })).payee;
+        const p1 = (await splitter.call("payee", { index: BigInt(0) })).payee;
+        const p2 = (await splitter.call("payee", { index: BigInt(1) })).payee;
         const pc = (await splitter.call("payeeCount")).payee_count;
         const s1 = (
           await splitter.call("shares", {
@@ -204,7 +204,7 @@ describe("PaymentSplitter Test Cases", function () {
           token: BigInt(randomAddress),
           payee: BigInt(acc1.starknetContract.address),
         }),
-        `PaymentSplitter: Failed to call balanceOf on contract {contract_address}` // to change to actual contract address when devnet supports cairo-lang v0.8.0
+        `PaymentSplitter: Failed to call balanceOf on token contract`
       );
     });
   });

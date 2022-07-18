@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (token/erc721/presets/ERC721_Full.cairo)
+# Immutable Cairo Contracts v0.2.1 (token/erc721/presets/ERC721_Full.cairo)
 
 # ERC721_Full.cairo has behaviour:
 # - ERC721, TokenMetadata, ContractMetadata, AccessControl, Royalty, Bridgeable
@@ -11,7 +11,8 @@ from starkware.cairo.common.uint256 import Uint256
 from starkware.cairo.common.bool import TRUE
 from starkware.starknet.common.syscalls import get_caller_address
 
-from openzeppelin.introspection.ERC165 import ERC165_supports_interface
+from openzeppelin.introspection.ERC165 import ERC165
+from openzeppelin.access.accesscontrol import AccessControl
 
 from immutablex.starknet.token.erc721.library import ERC721
 from immutablex.starknet.token.erc721_token_metadata.library import ERC721_Token_Metadata
@@ -19,7 +20,6 @@ from immutablex.starknet.token.erc721_contract_metadata.library import ERC721_Co
 from immutablex.starknet.auxiliary.erc2981.unidirectional_mutable import (
     ERC2981_UniDirectional_Mutable,
 )
-from immutablex.starknet.access.AccessControl import AccessControl, DEFAULT_ADMIN_ROLE
 
 #
 # Constants
@@ -27,6 +27,7 @@ from immutablex.starknet.access.AccessControl import AccessControl, DEFAULT_ADMI
 
 const MINTER_ROLE = 'MINTER_ROLE'
 const BURNER_ROLE = 'BURNER_ROLE'
+const DEFAULT_ADMIN_ROLE = 0x00
 
 #
 # Constructor
@@ -45,7 +46,8 @@ func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     ERC2981_UniDirectional_Mutable.initializer(
         default_royalty_receiver, default_royalty_fee_basis_points
     )
-    AccessControl.initializer(owner)
+    AccessControl.initializer()
+    AccessControl._grant_role(DEFAULT_ADMIN_ROLE, owner)
     return ()
 end
 
@@ -57,7 +59,7 @@ end
 func supportsInterface{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     interfaceId : felt
 ) -> (success : felt):
-    let (success) = ERC165_supports_interface(interfaceId)
+    let (success) = ERC165.supports_interface(interfaceId)
     return (success)
 end
 
@@ -239,7 +241,7 @@ end
 func setBaseURI{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     base_token_uri_len : felt, base_token_uri : felt*
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC721_Token_Metadata.set_base_token_uri(base_token_uri_len, base_token_uri)
     return ()
 end
@@ -248,7 +250,7 @@ end
 func setTokenURI{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     tokenId : Uint256, tokenURI_len : felt, tokenURI : felt*
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC721_Token_Metadata.set_token_uri(tokenId, tokenURI_len, tokenURI)
     return ()
 end
@@ -257,7 +259,7 @@ end
 func resetTokenURI{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     tokenId : Uint256
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC721_Token_Metadata.reset_token_uri(tokenId)
     return ()
 end
@@ -270,7 +272,7 @@ end
 func setContractURI{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     contract_uri_len : felt, contract_uri : felt*
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC721_Contract_Metadata.set_contract_uri(contract_uri_len, contract_uri)
     return ()
 end
@@ -283,7 +285,7 @@ end
 func setDefaultRoyalty{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     receiver : felt, feeBasisPoints : felt
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC2981_UniDirectional_Mutable.set_default_royalty(receiver, feeBasisPoints)
     return ()
 end
@@ -292,7 +294,7 @@ end
 func setTokenRoyalty{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     tokenId : Uint256, receiver : felt, feeBasisPoints : felt
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     let (exists) = ERC721._exists(tokenId)
     with_attr error_message("ERC721: token ID does not exist"):
         assert exists = TRUE
@@ -303,7 +305,7 @@ end
 
 @external
 func resetDefaultRoyalty{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}():
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     ERC2981_UniDirectional_Mutable.reset_default_royalty()
     return ()
 end
@@ -312,7 +314,7 @@ end
 func resetTokenRoyalty{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     tokenId : Uint256
 ):
-    AccessControl.only_role(DEFAULT_ADMIN_ROLE)
+    AccessControl.assert_only_role(DEFAULT_ADMIN_ROLE)
     let (exists) = ERC721._exists(tokenId)
     with_attr error_message("ERC721: token ID does not exist"):
         assert exists = TRUE
@@ -329,7 +331,7 @@ end
 func permissionedMint{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     account : felt, tokenId : Uint256
 ):
-    AccessControl.only_role(MINTER_ROLE)
+    AccessControl.assert_only_role(MINTER_ROLE)
     ERC721._mint(account, tokenId)
     return ()
 end
@@ -338,7 +340,7 @@ end
 func permissionedBurn{pedersen_ptr : HashBuiltin*, syscall_ptr : felt*, range_check_ptr}(
     tokenId : Uint256
 ):
-    AccessControl.only_role(BURNER_ROLE)
+    AccessControl.assert_only_role(BURNER_ROLE)
     ERC721._burn(tokenId)
     ERC2981_UniDirectional_Mutable.reset_token_royalty(tokenId)
     return ()

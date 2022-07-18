@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (finance/PaymentSplitter.cairo)
+# Immutable Cairo Contracts v0.2.1 (finance/PaymentSplitter.cairo)
 
 %lang starknet
 
@@ -9,12 +9,7 @@ from starkware.cairo.common.math import assert_not_zero, assert_lt
 from starkware.cairo.common.uint256 import Uint256, uint256_lt
 
 from openzeppelin.token.erc20.interfaces.IERC20 import IERC20
-from openzeppelin.security.safemath import (
-    uint256_checked_mul,
-    uint256_checked_div_rem,
-    uint256_checked_add,
-    uint256_checked_sub_le,
-)
+from openzeppelin.security.safemath import SafeUint256
 
 #
 # Events
@@ -158,12 +153,12 @@ func release{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
 
     # Update payee released
     let (already_released : Uint256) = _released.read(token, payee)
-    let (new_released : Uint256) = uint256_checked_add(payment, already_released)
+    let (new_released : Uint256) = SafeUint256.add(payment, already_released)
     _released.write(token, payee, new_released)
 
     # Update total released
     let (total_released : Uint256) = _total_released.read(token)
-    let (new_total_released : Uint256) = uint256_checked_add(payment, total_released)
+    let (new_total_released : Uint256) = SafeUint256.add(payment, total_released)
     _total_released.write(token, new_total_released)
 
     # Transfer the ERC20 tokens to payee
@@ -193,7 +188,7 @@ func _add_payees{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_p
     end
 
     # add payees
-    _payees.write(payees_len, [payees])
+    _payees.write(payees_len - 1, [payees])
     # add new shares to total shares
     let (total_shares) = _total_shares.read()
     _total_shares.write(total_shares + [shares])
@@ -217,14 +212,14 @@ func _get_pending_payment{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, rang
     # total tokens received by contract = current contract balance + released tokens
     let (contract_balance) = _get_balance(token)
     let (total_released : Uint256) = _total_released.read(token)
-    let (total_received : Uint256) = uint256_checked_add(contract_balance, total_released)
+    let (total_received : Uint256) = SafeUint256.add(contract_balance, total_released)
     let (already_released : Uint256) = _released.read(token, payee)
 
     # calculate pending payment
     # (total_received * (shares / total_shares)) - already_released
-    let (x : Uint256) = uint256_checked_mul(total_received, Uint256(shares, 0))
-    let (total_owed : Uint256, _) = uint256_checked_div_rem(x, Uint256(total_shares, 0))
-    let (pending_payment) = uint256_checked_sub_le(total_owed, already_released)
+    let (x : Uint256) = SafeUint256.mul(total_received, Uint256(shares, 0))
+    let (total_owed : Uint256, _) = SafeUint256.div_rem(x, Uint256(total_shares, 0))
+    let (pending_payment) = SafeUint256.sub_le(total_owed, already_released)
     return (pending_payment)
 end
 
@@ -232,8 +227,7 @@ func _get_balance{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_
     token : felt
 ) -> (balance : Uint256):
     let (contract_address) = get_contract_address()
-    with_attr error_message(
-            "PaymentSplitter: Failed to call balanceOf on contract {contract_address}"):
+    with_attr error_message("PaymentSplitter: Failed to call balanceOf on token contract"):
         let (balance) = IERC20.balanceOf(token, contract_address)
     end
     return (balance)

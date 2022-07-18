@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache 2.0
-# Immutable Cairo Contracts v0.1.0 (token/erc721_token_metadata/library.cairo)
+# Immutable Cairo Contracts v0.2.1 (token/erc721_token_metadata/library.cairo)
 
 %lang starknet
 
@@ -11,7 +11,7 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from cairolib.array import arr_concat
 from cairolib.shortstring import uint256_to_ss
 
-from openzeppelin.introspection.ERC165 import ERC165_register_interface
+from openzeppelin.introspection.ERC165 import ERC165
 
 from immutablex.starknet.token.erc721.library import ERC721
 from immutablex.starknet.utils.constants import IERC721_METADATA_ID
@@ -43,7 +43,7 @@ namespace ERC721_Token_Metadata:
 
     func initializer{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}():
         # register IERC721_Metadata
-        ERC165_register_interface(IERC721_METADATA_ID)
+        ERC165.register_interface(IERC721_METADATA_ID)
         return ()
     end
 
@@ -76,18 +76,22 @@ namespace ERC721_Token_Metadata:
             return (token_uri_len, token_uri_value)
         end
 
-        # We use the baseURI set by the owner, returning concat(baseURI,tokenId)
         let (local base_token_uri) = alloc()
         let (local base_token_uri_len) = ERC721_base_token_uri_len.read()
+        if base_token_uri_len != 0:
+            # We use the baseURI set by the owner, returning concat(baseURI,tokenId)
+            _base_token_uri(base_token_uri_len, base_token_uri)
 
-        _base_token_uri(base_token_uri_len, base_token_uri)
+            let (token_id_ss_len, token_id_ss) = uint256_to_ss(token_id)
+            let (token_uri_len, token_uri) = arr_concat(
+                base_token_uri_len, base_token_uri, token_id_ss_len, token_id_ss
+            )
 
-        let (token_id_ss_len, token_id_ss) = uint256_to_ss(token_id)
-        let (token_uri_len, token_uri) = arr_concat(
-            base_token_uri_len, base_token_uri, token_id_ss_len, token_id_ss
-        )
+            return (token_uri_len, token_uri)
+        end
 
-        return (token_uri_len, token_uri)
+        # If both base_token_uri and token_uri are undefined, return empty array
+        return (0, base_token_uri)
     end
 
     #
